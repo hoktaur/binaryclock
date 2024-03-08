@@ -1,0 +1,22 @@
+.clock {
+  display: flex;
+
+}
+.clock > .digit {
+  display: flex;
+  flex-direction: column-reverse;
+}
+.clock > span {
+  font-weight: bold;
+}
+.clock > .digit > div {
+  width: 5px;
+  height: 5px;
+  margin: 2px;
+  transition: all 0.5s;
+  box-shadow: 0px 0px 5px lightgrey, 0px 0px 15px grey;
+}
+.active {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 50px;
+}

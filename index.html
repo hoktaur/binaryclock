@@ -1,0 +1,119 @@
+<!doctype html>
+ 
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+ 
+  <title>Zegar binarny</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+ 
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+  <style>
+    body {
+      margin: 0px;
+      padding: 0px;
+    } 
+    .container {
+      background-image: url('https://static.pexels.com/photos/99577/barn-lightning-bolt-storm-99577.jpeg');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      justify-content: center;
+      align-items: center; 
+      position: fixed;
+      height: 100%;
+      width: 100%
+    }
+    .clock {
+      display: flex;
+    }
+    .clock > .digit {
+      display: flex;
+      flex-direction: column-reverse;
+    } 
+    .clock > .digit > div {
+      width: 3vw;
+      height: 3vw;
+      margin: 5px;
+      border: 1px solid white;
+      transition: all 0.5s;
+      box-shadow: 0px 0px 5px lightgrey, 0px 0px 15px grey;
+    }
+    .active {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 50px;
+      transform: rotate(180deg);
+    }
+  </style>
+</head>
+ 
+<body>
+  <div class="container">
+    <div class="clock">
+    </div>  
+  </div>
+  <script>
+    function BinaryClock(node) {
+      this.node = node,
+      this.ColsBitsCombination = [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+      this.colsNumber = this.ColsBitsCombination.length;
+    }
+  
+    BinaryClock.prototype.init = function() {
+      var numberBitsInCol,
+          clockDigit,
+          clockDigitBit,
+          i,
+          j;
+ 
+      for(numberBitsInCol of this.ColsBitsCombination) {
+        clockDigit = document.createElement('div');
+        clockDigit.classList.add('digit');
+ 
+        for(j = 0; j < numberBitsInCol; j++) {
+          clockDigitBit = document.createElement('div');
+          clockDigit.appendChild(clockDigitBit);
+        }
+        this.node.appendChild(clockDigit);
+      }
+    } 
+ 
+    BinaryClock.prototype.update = function() {
+      var nodeCurrentChildClassList,
+          curDate = new Date(),
+          curDateYear = this.concat0IfLessThan10(curDate.getFullYear()),
+          curDateMonth = this.concat0IfLessThan10(curDate.getMonth() + 1),
+          curDateDay = this.concat0IfLessThan10(curDate.getDate()),
+          curDateHours = this.concat0IfLessThan10(curDate.getHours()),
+          curDateMinutes = this.concat0IfLessThan10(curDate.getMinutes()),
+          curDateSeconds = this.concat0IfLessThan10(curDate.getSeconds()),
+          curDateString = '' + curDateYear + curDateMonth + curDateDay + curDateHours + curDateMinutes + curDateSeconds,
+          bit,
+          i,
+          j;
+ 
+      for(i = 0; i < this.colsNumber; i++) {
+        bit = 1;
+         
+        for(j = 0; j < this.ColsBitsCombination[i]; j++) {
+          nodeCurrentChildClassList = this.node.children[i].children[j].classList;
+          (curDateString[i] & bit) ? nodeCurrentChildClassList.add('active') : nodeCurrentChildClassList.remove('active');
+        
+          bit *= 2;
+        } 
+      } 
+    }
+     
+    BinaryClock.prototype.concat0IfLessThan10 = function(digit) {
+      return (digit < 10) ? '0' + digit : digit;
+    } 
+   
+    var clock1 = new BinaryClock(document.querySelector('.clock'));
+    clock1.init();
+    setInterval(function() { clock1.update() }, 1000);
+  </script>
+</body>
+</html>
